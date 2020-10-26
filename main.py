@@ -184,6 +184,7 @@ def route_login():
 @app.route('/logout')
 def route_logout():
     flask.session['auth'] = None
+    flask.g.auth = None
     return flask.render_template('logout.html')
 
 

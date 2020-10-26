@@ -16,7 +16,7 @@
     <body>
         <div id="header">
             <a href="{{url_for('route_index')}}"><img src="{{url_for('route_favicon')}}" alt="C-4" draggable=false></a>
-            <a href="{{url_for('route_logout' if is_auth()['ok'] else 'route_login')}}"><img src="{{url_for('static', filename='img/' + ('lock.png' if is_auth()['ok'] else 'key.png'))}}" alt="{{'login' if is_auth()['ok'] else 'logout'}}" draggable=false></a>
+            <a href="{{url_for('route_logout' if is_auth()['ok'] else 'route_login')}}"><img src="{{url_for('static', filename='img/' + ('lock.png' if is_auth()['ok'] else 'key.png'))}}" alt="{{'logout' if is_auth()['ok'] else 'login'}}" draggable=false></a>
         </div>
         {% block body %}{% endblock %}
     </body>
