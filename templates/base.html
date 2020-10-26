@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head land="en">
+        <title>Carver Coding Club Computer</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/base.css')}}">
+{%- if self.css() -%}
+    {%- for file in self.css().split('/') %}
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/' + file)}}">
+    {%- endfor -%}
+{%- endif -%}{%- if self.js() -%}
+    {%- for file in self.js().split('/') %}
+        <script src="{{url_for('static', filename='js/' + file)}}"></script>
+    {%- endfor -%}
+{%- endif %}
+    </head>
+    <body>
+        <div id="header">
+            <a href="{{url_for('route_index')}}"><img src="{{url_for('route_favicon')}}" alt="C-4" draggable=false></a>
+            <a href="{{url_for('route_logout' if is_auth()['ok'] else 'route_login')}}"><img src="{{url_for('static', filename='img/' + ('lock.png' if is_auth()['ok'] else 'key.png'))}}" alt="{{'login' if is_auth()['ok'] else 'logout'}}" draggable=false></a>
+        </div>
+        {% block body %}{% endblock %}
+    </body>
+</html>

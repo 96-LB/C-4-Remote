@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block css %}create.css{% endblock %}
+{% block js %}create.js{% endblock %}
+{% block body %}
+{% set edit = problem is not none -%}
+<form id="create_back" action="{{url_for('route_problems')}}">
+    <button>Return to problem list</button>
+</form>
+<form id="create_form">
+    <fieldset class="create_field flex">
+        <legend>Metadata</legend>
+        <input type="text" name="name" placeholder="Name" maxlength=32 value="{{problem.name if edit}}" required>
+        <input name="filename" type="text" placeholder="Filename" value="{{filename if edit}}" required>
+        <textarea class="flex_grow" name="text" placeholder="Text" rows=20 maxlength=1048576 required>{{problem.text if edit}}</textarea>
+    </fieldset>
+    <fieldset class="create_field flex">
+        <legend>Tests</legend>
+        <div id="create_div_test">
+            <button type="button" onclick="add_field('test', 1)">&plus;</button><button type="button" onclick="add_field('test', -1)">&minus;</button>
+        </div>
+    </fieldset>
+    <fieldset class="create_field flex">
+        <legend>Images</legend>
+        <div id="create_div_image">
+            <button type="button" onclick="add_field('image', 1)">&plus;</button><button type="button" onclick="add_field('image', -1)">&minus;</button>
+        </div>
+    </fieldset>
+    <div class="load_div">
+        <input type="submit" value="UPLOAD">
+        <img class="load_img" src="{{url_for('static', filename='img/load.gif')}}" alt="Loading...">
+    </div>
+    {%- if edit %}
+    <script>
+        add_field('test', {{problem.tests | length}}, {{problem.tests | safe}});
+        add_field('image', {{problem.images | length}}, {{problem.images | safe}});
+    </script>
+    {%- endif %}
+</form>
+{% endblock %}

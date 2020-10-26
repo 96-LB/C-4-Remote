@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block css %}problems.css{% endblock %}
+{% block js %}problems.js{% endblock %}
+{% block body %}
+<form id="problems_form" action="{{url_for('route_create')}}">
+    <button>Create new problem</button>
+    <fieldset>
+        <legend>Problems</legend>
+        {%for problem in problems%}
+        <fieldset id="problems_field_{{problem}}" class="flex">
+            <legend>{{problem}}</legend>
+            <div class="load_div">
+                <button class="problems_btn" name="edit" value="{{problem}}">Edit</button>
+                <button class="problems_btn" type="button" name="delete" value="{{problem}}">Delete</Button>
+                <img class="load_img" src="{{url_for('static', filename='img/load.gif')}}" alt="Loading...">
+            </div>
+        </fieldset>
+        {%endfor%}
+    </fieldset>
+</form>
+{% endblock %}

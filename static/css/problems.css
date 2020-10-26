@@ -1,0 +1,13 @@
+#problems_form {
+    min-width: 500px;
+    text-align: center;
+}
+
+#problems_form > button {
+    width: 150px;
+}
+
+button.problems_btn {
+    margin: 4px;
+    width: 75px;
+}

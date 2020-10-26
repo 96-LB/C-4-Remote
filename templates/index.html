@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+{% block js %}{% endblock %}
+{% block body %}
+<p>
+    The Carver Coding Club Computer, or C-4, is an application designed to facilitate the creation and distribution of competitive programming problems. You can download it <a href="{{url_for('static', filename='C-4.exe')}}">here</a>.
+</p>
+{%- if is_auth()['ok'] %}
+<p>
+    Click <a href="{{url_for('route_problems')}}">here</a> to manage the problem list and <a href="{{url_for('route_create')}}">here</a> to upload a new problem.  
+</p>
+{%- endif %}
+{% endblock %}

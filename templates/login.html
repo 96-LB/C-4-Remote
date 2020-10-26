@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+{% block js %}login.js{% endblock %}
+{% block body %}
+<form id="login_form">
+    Accessing this page requires authorization:
+    <input type="password" id="password" name="password" placeholder="Password" required>
+    <div class="load_div">
+        <input type="submit" value="LOG IN">
+        <img class="load_img" src="{{url_for('static', filename='img/load.gif')}}" alt="Loading...">
+    </div>
+</form>
+{% endblock %}

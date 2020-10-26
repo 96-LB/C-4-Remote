@@ -1,0 +1,40 @@
+#create_back {
+    min-width: 400px;
+    text-align: center;
+}
+
+#create_back > button {
+    width: 150px;
+}
+
+fieldset.create_field {
+    margin: 16px 0px 16px 0px;
+    min-width: 400px;
+    box-sizing: border-box;
+}
+
+fieldset.create_field > fieldset {
+    margin: 16px 0px 16px 0px;
+    flex-basis: 100%;
+}
+
+fieldset.create_field > input {
+    flex-grow: 1;
+    margin: 4px;
+}
+
+fieldset.create_field textarea {
+    flex-grow: 1;
+    margin: 4px;
+}
+
+fieldset.create_field > fieldset > label {
+    flex-basis: 100%;
+    margin-bottom: 4px;
+}
+
+#create_div_test > button, #create_div_image > button {
+    white-space: nowrap;
+    margin: 0px 4px 4px 4px;
+    width: 25px;
+}
