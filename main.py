@@ -18,7 +18,7 @@ for i in drive.ListFile().GetList():
 app = flask.Flask('')
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 5
 app.config['SECRET_KEY'] = base64.b64decode(os.getenv('KEY'))
-app.config['AUTH_TIMEOUT'] = 15 # seconds
+app.config['AUTH_TIMEOUT'] = 60 * 60 # one hour
 
 limiter = flask_limiter.Limiter(app, key_func=flask_limiter.util.get_remote_address)
 rate_limit = limiter.shared_limit("1/second;30/minute", scope="gdrive")
