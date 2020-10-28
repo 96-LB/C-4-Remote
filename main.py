@@ -4,16 +4,8 @@ import pydrive.auth, pydrive.drive, pydrive.files
 import bcrypt
 import flask_limiter, flask_limiter.util
 
-gauth = pydrive.auth.GoogleAuth()
-scope = ['https://www.googleapis.com/auth/drive']
-gauth.credentials = pydrive.auth.ServiceAccountCredentials.from_json_keyfile_dict(json.loads(base64.b64decode(os.getenv('AUTH'))), scope)
-drive = pydrive.drive.GoogleDrive(gauth)
-
-
-for i in os.listdir('Problems/'):
-    os.remove('Problems/' + i)
-for i in drive.ListFile().GetList():
-    i.GetContentFile('Problems/' + i['title'])
+drive = None
+gauth = None
 
 app = flask.Flask('')
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 5
@@ -56,6 +48,25 @@ def needs_auth(f):
                 return authed, 403
         return f(*args, **kwargs)
     return wrapper
+
+def needs_gauth(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        global gauth, drive
+        if gauth is None or gauth.access_token_expired:
+            gauth = pydrive.auth.GoogleAuth()
+            gauth.credentials = pydrive.auth.ServiceAccountCredentials.from_json_keyfile_dict(json.loads(base64.b64decode(os.getenv('AUTH'))), ['https://www.googleapis.com/auth/drive'])
+            drive = pydrive.drive.GoogleDrive(gauth)
+        return f(*args, **kwargs)
+    return wrapper
+
+needs_gauth(lambda: None)()
+
+for i in os.listdir('Problems/'):
+    os.remove('Problems/' + i)
+for i in drive.ListFile().GetList():
+    i.GetContentFile('Problems/' + i['title'])
+
 
 @app.errorhandler(429)
 @app.errorhandler(pydrive.files.ApiRequestError)
@@ -112,6 +123,7 @@ def route_problem_get(name):
     return flask.send_file('Problems/' + name, as_attachment=True)
 
 @needs_auth
+@needs_gauth
 @rate_limit
 def route_problem_post(oldname):
     old = unproblem(oldname)
@@ -149,6 +161,7 @@ def route_problem_post(oldname):
     return {'ok': True, 'message': 'made problem'}
 
 @needs_auth
+@needs_gauth
 @rate_limit
 def route_problem_delete(name):
     gfiles = drive.ListFile({'q': f" title='{name}' "}).GetList()
