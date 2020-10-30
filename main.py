@@ -17,22 +17,20 @@ rate_limit = limiter.shared_limit("1/second;30/minute", scope="gdrive")
 
 @app.before_request
 def run_auth():
-    flask.g.auth = None
-    is_auth()
+    is_auth(True)
 
-def is_auth():
-    if flask.g.auth:
-        return flask.g.auth
-    login = False
-    timeout = False
-    if 'auth' not in flask.session:
-        flask.session['auth'] = None
-    if flask.session['auth'] is not None:
-        timeout = time.time() - flask.session['auth'] > app.config['AUTH_TIMEOUT']
-        if timeout: print(flask.request.endpoint)
-        login = not timeout
-    flask.session['auth'] = time.time() if login else None
-    flask.g.auth = {'ok': login, 'message': 'Sucessfully authorized.' if login else 'Your session has expired. Refresh the page to log in again.' if timeout else 'You must log in to perform this action.'}
+def is_auth(refresh=False):
+    if refresh or not flask.g.auth:
+        login = False
+        timeout = False
+        if 'auth' not in flask.session:
+            flask.session['auth'] = None
+        if flask.session['auth'] is not None:
+            timeout = time.time() - flask.session['auth'] > app.config['AUTH_TIMEOUT']
+            if timeout: print(flask.request.endpoint)
+            login = not timeout
+        flask.session['auth'] = time.time() if login else None
+        flask.g.auth = {'ok': login, 'message': 'Sucessfully authorized.' if login else 'Your session has expired. Refresh the page to log in again.' if timeout else 'You must log in to perform this action.'}
     return flask.g.auth
 
 app.jinja_env.globals.update(is_auth=is_auth)
@@ -197,7 +195,7 @@ def route_login():
 @app.route('/logout')
 def route_logout():
     flask.session['auth'] = None
-    flask.g.auth = None
+    run_auth()
     return flask.render_template('logout.html')
 
 
