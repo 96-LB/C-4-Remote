@@ -8,9 +8,9 @@ drive = None
 gauth = None
 
 app = flask.Flask('')
-app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 5
 app.config['SECRET_KEY'] = base64.b64decode(os.getenv('KEY'))
 app.config['AUTH_TIMEOUT'] = 60 * 60 # one hour
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 100 # 100 MB
 
 limiter = flask_limiter.Limiter(app, key_func=flask_limiter.util.get_remote_address)
 rate_limit = limiter.shared_limit("1/second;30/minute", scope="gdrive")
@@ -135,7 +135,7 @@ def route_problem_post(oldname):
 
     tests = []
     for i in range(1, 26):
-        test = {'visible': flask.request.form.get('visible_' + str(i)) == '1', 'input': flask.request.form.get('input_' + str(i)), 'output': flask.request.form.get('output_' + str(i))}
+        test = {'visible': flask.request.form.get('visible_' + str(i)) == '1', 'input': flask.request.form.get('input_' + str(i))[:1024*1024], 'output': flask.request.form.get('output_' + str(i)[:1024*1024])}
         if all(test[i] is not None and len(str(test[i]).strip()) > 0 for i in test):
             tests.append(test)
 

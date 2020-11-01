@@ -20,7 +20,7 @@ function add_field(type, count=1, values=[])
             <label class="flex-grow"><input name="filename_img_#" type="text" placeholder="Filename" value="$"></label>
             <input name="img_#" type="file" accept="image/*">
 `};
-    const maxes = {'test': 25, 'image': 10};
+    const maxes = {'test': 20, 'image': 10};
     const sender = document.getElementById('create_div_' + type);
     if(!this.counts.hasOwnProperty(type))
     {
