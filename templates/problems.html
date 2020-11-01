@@ -6,7 +6,7 @@
     <button>Create new problem</button>
     <fieldset>
         <legend>Problems</legend>
-        {%f or problem in problems %}
+        {% for problem in problems %}
         <fieldset id="problems_field_{{problem}}" class="flex">
             <legend>{{problem}}</legend>
             <div class="load_div">
