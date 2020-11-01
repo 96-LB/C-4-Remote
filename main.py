@@ -66,6 +66,10 @@ for i in drive.ListFile().GetList():
     i.GetContentFile('Problems/' + i['title'])
 
 
+@app.errorhandler(413)
+def request_too_large(e):
+    return {'ok': False, 'message': 'The uploaded file size is too large.'}, 413
+
 @app.errorhandler(429)
 @app.errorhandler(pydrive.files.ApiRequestError)
 def rate_limited(e):
@@ -97,7 +101,7 @@ def route_problems_post():
         with open('Problems/' + filename, 'rb') as f:
             f.seek(-12, os.SEEK_END)
             out[filename] = base64.b64encode(f.read()).decode('utf8')
-    return json.dumps(out)
+    return out
 
 
 
@@ -135,9 +139,12 @@ def route_problem_post(oldname):
 
     tests = []
     for i in range(1, 26):
-        test = {'visible': flask.request.form.get('visible_' + str(i)) == '1', 'input': flask.request.form.get('input_' + str(i))[:1024*1024], 'output': flask.request.form.get('output_' + str(i)[:1024*1024])}
-        if all(test[i] is not None and len(str(test[i]).strip()) > 0 for i in test):
-            tests.append(test)
+        test = {'visible': flask.request.form.get('visible_' + str(i)) == '1', 'input': flask.request.form.get('input_' + str(i)), 'output': flask.request.form.get('output_' + str(i))}
+        if all(test[i] is not None for i in test):
+            test['input'] = str(test['input'])[:1024*1024]
+            test['output'] = str(test['input'])[:1024*1024]
+            if all(len(str(test[i]).strip()) > 0 for i in test):
+                tests.append(test)
 
     
     images = {}
