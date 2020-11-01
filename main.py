@@ -122,6 +122,8 @@ def route_problem(name):
     return {'GET': route_problem_get, 'POST': route_problem_post, 'DELETE': route_problem_delete}[flask.request.method](name)
 
 def route_problem_get(name):
+    if not os.path.exists('Problems/' + name):
+        flask.abort(404)
     return flask.send_file('Problems/' + name, as_attachment=True)
 
 @needs_auth
