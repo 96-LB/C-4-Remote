@@ -144,7 +144,7 @@ def route_problem_post(oldname):
         test = {'visible': flask.request.form.get('visible_' + str(i)) == '1', 'input': flask.request.form.get('input_' + str(i)), 'output': flask.request.form.get('output_' + str(i))}
         if all(test[i] is not None for i in test):
             test['input'] = str(test['input'])[:1024*1024]
-            test['output'] = str(test['input'])[:1024*1024]
+            test['output'] = str(test['output'])[:1024*1024]
             if all(len(str(test[i]).strip()) > 0 for i in test):
                 tests.append(test)
 
