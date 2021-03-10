@@ -68,11 +68,13 @@ for i in drive.ListFile().GetList():
 
 @app.errorhandler(413)
 def request_too_large(e):
+    print(f'413 Error: {e}')
     return {'ok': False, 'message': 'The uploaded file size is too large.'}, 413
 
 @app.errorhandler(429)
 @app.errorhandler(pydrive.files.ApiRequestError)
 def rate_limited(e):
+    print(f'429 Error: {e}')
     return {'ok': False, 'message': 'You are performing this action too quickly. You must wait before trying again.'}, 429
 
 @app.route('/favicon.ico')
